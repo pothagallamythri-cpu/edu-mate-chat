@@ -43,7 +43,8 @@ function Viewer() {
     supabase.rpc("record_view", { _resource_id: id });
   }, [id]);
   useEffect(() => {
-    if (r?.file_path) getFileUrl(r.file_path).then(setUrl).catch(() => setUrl(null));
+    if (r?.file_path) void getFileUrl(r.file_path).then(setUrl).catch(() => setUrl(null));
+    return undefined;
   }, [r?.file_path]);
 
   async function remove() {
