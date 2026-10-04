@@ -81,7 +81,7 @@ function Resources() {
   );
 }
 
-function ChipRow({ options, value, onChange }: { options: readonly string[]; value?: string; onChange: (v?: string) => void }) {
+function ChipRow({ options, value, onChange }: { options: readonly string[]; value?: string | undefined; onChange: (v?: string) => void }) {
   return (
     <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4">
       {options.map((o) => (
