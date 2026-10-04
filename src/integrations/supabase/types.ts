@@ -14,16 +14,204 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      ai_chats: {
+        Row: {
+          created_at: string
+          id: string
+          messages: Json
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          messages?: Json
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          messages?: Json
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      bookmarks: {
+        Row: {
+          created_at: string
+          id: string
+          resource_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          resource_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          resource_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookmarks_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      downloads: {
+        Row: {
+          created_at: string
+          id: string
+          resource_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          resource_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          resource_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "downloads_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          class_level: string | null
+          created_at: string
+          full_name: string
+          id: string
+          school: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          class_level?: string | null
+          created_at?: string
+          full_name?: string
+          id: string
+          school?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          class_level?: string | null
+          created_at?: string
+          full_name?: string
+          id?: string
+          school?: string | null
+        }
+        Relationships: []
+      }
+      resources: {
+        Row: {
+          class_level: string
+          created_at: string
+          description: string
+          downloads: number
+          file_name: string | null
+          file_path: string | null
+          id: string
+          mime_type: string | null
+          resource_type: string
+          subject: string
+          teacher_id: string | null
+          teacher_name: string
+          title: string
+          views: number
+        }
+        Insert: {
+          class_level: string
+          created_at?: string
+          description?: string
+          downloads?: number
+          file_name?: string | null
+          file_path?: string | null
+          id?: string
+          mime_type?: string | null
+          resource_type: string
+          subject: string
+          teacher_id?: string | null
+          teacher_name?: string
+          title: string
+          views?: number
+        }
+        Update: {
+          class_level?: string
+          created_at?: string
+          description?: string
+          downloads?: number
+          file_name?: string | null
+          file_path?: string | null
+          id?: string
+          mime_type?: string | null
+          resource_type?: string
+          subject?: string
+          teacher_id?: string | null
+          teacher_name?: string
+          title?: string
+          views?: number
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      record_download: { Args: { _resource_id: string }; Returns: undefined }
+      record_view: { Args: { _resource_id: string }; Returns: undefined }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "student" | "teacher"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +338,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["student", "teacher"],
+    },
   },
 } as const
