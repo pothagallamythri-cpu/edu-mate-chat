@@ -1,24 +1,38 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { useAuth } from "@/lib/auth";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "Classroom Resource Hub — Notes, resources & AI help" },
+      { name: "description", content: "Browse class notes, assignments and question papers, and ask the Classroom AI anything." },
+      { property: "og:title", content: "Classroom Resource Hub" },
+      { property: "og:description", content: "Browse class notes, assignments and question papers, and ask the Classroom AI anything." },
+    ],
+  }),
+  component: Splash,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Splash() {
+  const { session, loading } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (loading) return;
+    const t = setTimeout(() => navigate({ to: session ? "/home" : "/auth", replace: true }), 600);
+    return () => clearTimeout(t);
+  }, [loading, session, navigate]);
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-primary text-primary-foreground">
+      <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-primary-foreground/15 text-4xl animate-rise">📚</div>
+      <h1 className="mt-5 text-2xl font-extrabold animate-rise">Classroom Hub</h1>
+      <p className="mt-1 text-sm opacity-80">Learn. Share. Grow.</p>
+      <div className="mt-8 flex gap-1.5">
+        {[0, 1, 2].map((i) => (
+          <span key={i} className="h-2 w-2 rounded-full bg-primary-foreground typing-dot" style={{ animationDelay: `${i * 0.15}s` }} />
+        ))}
+      </div>
     </div>
   );
 }
